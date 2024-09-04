@@ -5,7 +5,23 @@ app.setup({
 });
 
 module.exports = async function (context, req) {
-    context.res.json({
-        text: "Hello from the API"
-    });
+    context.res = {
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: {
+            message: 'Hello, world!'
+        }
+    };
 };
+
+// module.exports = async function (context, req) {
+//     context.res = {
+//         headers: {
+//             'Content-Type': 'application/json'
+//         },
+//         body: {
+//             message: 'Hello, world!'
+//         }
+//     };
+// };
