@@ -16,7 +16,8 @@
 
     <script>
     (async function() {
-        const { text } = await( await fetch(`/api/message`)).json();
+        // the url we sent the GET request to does not specify ?name=
+        const { text } = await( await fetch(`/api/message?name=test`)).json();
         document.querySelector('#name').textContent = text;
     }());
     </script>
