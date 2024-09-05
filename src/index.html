@@ -30,7 +30,7 @@
       const name = urlParams.get('name') || 'Guest'; // Default to 'Guest' if no name is provided
 
       // Fetch data from the API, including the name in the query string
-      const { body } = await (await fetch(`/api/message?name=${name}`)).json();
+      const body = await (await fetch(`/api/message?name=${name}`)).json();
       console.log(body);
 
       // Update the DOM with the response
