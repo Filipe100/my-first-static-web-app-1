@@ -14,15 +14,6 @@
     <p>Loading content from the API: <b id="name">...</b></p>
   </main>
 
-  <!-- <script>
-    (async function () {
-      // the url we sent the GET request to does not specify ?name=
-      const { text } = await (await fetch(`/api/message`)).json();
-      document.querySelector('#name').textContent = text;
-    }());
-
-  </script> -->
-
   <script>
     (async function () {
       // Extract 'name' from the query string
@@ -38,7 +29,6 @@
     }());
   </script>
 
-
 </body>
 
 </html>
@@ -47,25 +37,39 @@
 <!-- 
 
 
-JavaScript (inside <script>...</script>):
+JavaScript Explanation:
+The script is enclosed in an Immediately Invoked Function Expression (IIFE): (async function() { ... }());. 
+This means the function runs automatically as soon as it’s defined, without needing to be called manually.
 
-The JavaScript is immediately executed due to the use of an IIFE (Immediately Invoked Function Expression) (async function() { ... }());.
+Extracting the name from the query string:
 
-Fetch API Call:
-await fetch(/api/message): Sends an HTTP GET request to /api/message to retrieve data from an API.
-The await keyword ensures that the program waits for the fetch call to complete before proceeding.
+const urlParams = new URLSearchParams(window.location.search);:
+This creates a URLSearchParams object, which allows you to extract query string parameters from the current page URL.
 
-await (await fetch(/api/message)).json(): This waits for the response, parses it as JSON, and stores the result in the { text } object. 
-The API is expected to return a JSON object with a text field.
+window.location.search gets the part of the URL after the ?, which contains the query string.
+const name = urlParams.get('name') || 'Guest';:
+This checks if there is a name parameter in the query string (e.g., ?name=John). If found, it assigns that value to the name variable.
+If no name is provided, it defaults to "Guest".
 
-Update the DOM:
-document.querySelector('#name').textContent = text;: 
-This selects the <b> element with the id="name" and updates its content with the text received from the API.
+Fetching data from the API:
+const body = await (await fetch(/api/message?name=${name})).json();:
+This sends a GET request to the API endpoint /api/message with the name parameter in the query string (e.g., /api/message?name=John).
+The API returns a JSON response, which is parsed and stored in the body variable.
+console.log(body);: This logs the API response to the browser's console for debugging purposes.
 
-What Happens:
-- The page initially displays "Loading content from the API: ...".
-- After the JavaScript runs, it sends a request to /api/message.
-- Once the response is received, it updates the bold text inside <b id="name"> with the text fetched from the API. 
-- For example, if the API returns {"text": "Hello World"}, the page will display "Loading content from the API: Hello World".
+Updating the DOM:
+document.querySelector('#name').textContent = body;:
+This selects the <b> element with the id="name" and updates its text content with the value received from the API (stored in body).
+This replaces the initial "..." with the API response.
+
+Example Flow:
+If you visit the page with the URL https://blue-river-03d6d751e.5.azurestaticapps.net/?name=John, the name parameter will be set to "John".
+
+The script fetches data from the API: /api/message?name=John. If the API responds with a message like "Hello, John. This HTTP triggered function executed successfully.", the text inside the <b id="name"> tag will be updated to display that message.
+
+If no name parameter is present in the URL (e.g., https://blue-river-03d6d751e.5.azurestaticapps.net/), the name will default to "Guest", and the request will go to /api/message?name=Guest.
+
+Previous version of the Code:
+The previous JavaScript code (which is now commented out) was making a simpler API call without passing a name parameter in the query string. It has been replaced by the updated version that dynamically reads the name from the URL and includes it in the API request.
 
 -->
