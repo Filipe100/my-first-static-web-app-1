@@ -12,16 +12,63 @@
   <main>
     <h1>Vanilla JavaScript App</h1>
     <p>Loading content from the API: <b id="name">...</b></p>
-    </main>
+  </main>
 
-    <script>
-    (async function() {
-        // the url we sent the GET request to does not specify ?name=
-        const { text } = await( await fetch(`/api/message`)).json();
-        document.querySelector('#name').textContent = text;
+  <!-- <script>
+    (async function () {
+      // the url we sent the GET request to does not specify ?name=
+      const { text } = await (await fetch(`/api/message`)).json();
+      document.querySelector('#name').textContent = text;
     }());
 
-    </script>
+  </script> -->
+
+<script>
+  (async function() {
+      // Extract 'name' from the query string
+      const urlParams = new URLSearchParams(window.location.search);
+      const name = urlParams.get('name') || 'Guest'; // Default to 'Guest' if no name is provided
+
+      // Fetch data from the API, including the name in the query string
+      const { body } = await (await fetch(`/api/message?name=${name}`)).json();
+      
+      // Update the DOM with the response
+      document.querySelector('#name').textContent = body;
+  }());
+</script>
+
+
 </body>
 
 </html>
+
+
+<!-- 
+
+
+JavaScript (inside <script>...</script>):
+
+The JavaScript is immediately executed due to the use of an IIFE (Immediately Invoked Function Expression) (async function() { ... }());.
+
+Fetch API Call:
+await fetch(/api/message): Sends an HTTP GET request to /api/message to retrieve data from an API.
+The await keyword ensures that the program waits for the fetch call to complete before proceeding.
+
+await (await fetch(/api/message)).json(): This waits for the response, parses it as JSON, and stores the result in the { text } object. 
+The API is expected to return a JSON object with a text field.
+
+Update the DOM:
+document.querySelector('#name').textContent = text;: 
+This selects the <b> element with the id="name" and updates its content with the text received from the API.
+
+What Happens:
+- The page initially displays "Loading content from the API: ...".
+- After the JavaScript runs, it sends a request to /api/message.
+- Once the response is received, it updates the bold text inside <b id="name"> with the text fetched from the API. 
+- For example, if the API returns {"text": "Hello World"}, the page will display "Loading content from the API: Hello World".
+
+
+
+
+
+-->
